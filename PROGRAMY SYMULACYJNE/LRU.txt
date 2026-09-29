@@ -1,0 +1,26 @@
+#LRU - zastępowane są strony, które były najdłużej nieużywane. (“popycha dalej” jak ta sama liczba)
+
+def LRU(pages, frames):  # Definiujemy funkcję
+    cache = []  # Lista, która będzie przechowywać stan pamięci
+    page_faults = 0  # Licznik błędów strony
+
+    for page in pages:
+        if page not in cache:
+            page_faults += 1  # Jeśli pojawi się strona, której nie ma w pamięci, zwiększamy licznik błędów strony o 1
+            if len(cache) >= frames:  # Jeśli pamięć naszej ramki jest zapełniona, usuwamy najstarszą stronę
+                cache.pop(0)  # Usuwamy najstarszą stronę przez pop
+            cache.append(page)  # Dodajemy nową stronę do pamięci
+        else:
+            cache.remove(page)  # Usuwamy stronę, aby ją znowu dodać
+            cache.append(page)  # Przesuwamy bieżącą stronę, aby odświeżyć ją "dodać ją ponownie ale na końcu"
+        print("Strony w pamięci", f"({len(cache)}/{frames})     ", cache, f"     {page} - zostało dodane do pamięci")
+
+    return page_faults  # Zwracamy liczbę błędów strony
+
+# Wpisujemy nasze wartości
+pages = [2, 5, 3, 1, 2, 5, 6, 2, 5, 3, 1, 6]
+frames = 4  # Liczba ramek stron, które mają znajdować się w pamięci
+
+# Przeprowadzamy symulację.
+page_faults = LRU(pages, frames)
+print("\nLiczba błędów wynikających z braku strony :", page_faults)

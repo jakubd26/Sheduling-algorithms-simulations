@@ -1,0 +1,48 @@
+# ALGORYTM LCFS - sortujemy procesy od końca w takiej kolejności jakiej sie pojawiły
+
+def LCFS(arrival_times, burst_times) -> None:  # Definiujemy funkcję
+    arrival_times: list[int]
+    burst_times: list[int]
+    num_tasks = len(arrival_times)  # Ustawiamy długość listy jako ilość naszych zadań
+    process_id = list(range(num_tasks))  # Tworzenie list, które będą reprezentować id każdego procesu (1 proces to 0)
+
+    #For, który sortuje według czasu pojawienia (arrival_times).
+    for x in range(num_tasks):
+        for y in range(0, num_tasks - 1):  # Iterujemy przez indeksy procesów
+            if arrival_times[process_id[y]] < arrival_times[process_id[y + 1]]:
+                temp = process_id[y]  #przechowuje tymczasowo identyfikator procesu
+                process_id[y] = process_id[y + 1] #zamienia miejscami procesy
+                process_id[y + 1] = temp #oddaje identyfikator ten co był tymczasowy
+
+    start_times = [0] * num_tasks  #USTAWIANIE KAŻDEJ LISTY NA ILOŚĆ WOLNYCH MIEJSC num_tasks oraz zastępowanie to 0
+    finish_times = [0] * num_tasks
+    waiting_times = [0] * num_tasks
+    current_time = 0
+
+    #Ustawiamy poszczególne wartości dla danego process_id (już w odpowiedniej kolejności).
+    for pid in process_id:
+        current_time = max(current_time, arrival_times[pid]) #program jeśli current time jest mniejsze niż arrival_time to ustawia go na max wartość czyli na arrival time
+        start_times[pid] = current_time  # Ustawiamy czas rozpoczęcia na obecny
+        finish_times[pid] = current_time + burst_times[pid]  # Ustawiamy czas zakończenia jako dodanie czasu startu do czasu trwania
+        waiting_times[pid] = start_times[pid] - arrival_times[pid]  # Obliczamy czas oczekiwania
+        current_time = finish_times[pid]  # Robimy aktualizację aktualnego czasu
+
+    total_waiting_time = sum(waiting_times)  # Suma czasu oczekiwania to całkowity czas oczekiwania
+    average_waiting_time = total_waiting_time / num_tasks  # Średni czas oczekiwania to całkowity czas oczekiwania podzielony przez ilość procesów
+
+    # Wypisujemy nasze wyniki w tabelce
+    print("===============================================================================================================================")
+    print("|| Kolejność || ID Procesu || Czas pojawienia || Czas wykonania  || Czas rozpoczęcia || Czas zakończenia || Czas oczekiwania ||")
+    print("===============================================================================================================================")
+    for index, i in enumerate(process_id, start=1): #przypisujemy do indexu index procces_id, a do i wartość
+        print(f"|| {index:^9} || {i:^10} || {arrival_times[i]:^15} || {burst_times[i]:^15} || {start_times[i]:^16} || {finish_times[i]:^16} || {waiting_times[i]:^16} ||") #wyśrodkowanie ^9 indexu
+    print("===============================================================================================================================\n")
+    print(f"          Średni czas oczekiwania procesów: {round(average_waiting_time, 3)}")  # Zaokrągla do trzech miejsc po przecinku
+    print(f"          Czas działania całego algorytmu: {(finish_times[process_id[-1]] - start_times[process_id[0]])}\n")  # Czas trwania skończenia ostatniego a zaczęcia pierwszego
+
+# Wpisujemy w tablicę nasze wartości
+arrival_times = [5, 3333, 2, 13]
+burst_times = [6, 3, 7, 4]
+
+# Przeprowadzamy symulację
+LCFS(arrival_times, burst_times)
