@@ -1,5 +1,6 @@
-Simulations of scheduling algorithms in python
--FCFS -First Come First Served
--LCFS - Last Come First Served
--FIFO - First in First out
--LRU - Least Recently Used
+### Simulations of scheduling algorithms in Python
+
+- **FCFS** – First Come First Served
+- **LCFS** – Last Come First Served
+- **FIFO** – First In First Out
+- **LRU** – Least Recently Used
